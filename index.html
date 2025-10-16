@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -82,15 +82,13 @@ canvas { display:block; pointer-events:none; }
 <button id="homeBtn">Home</button>
 <canvas id="gameCanvas"></canvas>
 
-<!-- External libraries -->
+<!-- Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-<!-- Applause sound -->
 <audio id="clapSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3b1f4d033d.mp3?filename=clapping-44774.mp3"></audio>
 
 <script>
-// --- 3D setup ---
+// --- 3D Setup ---
 const canvas=document.getElementById("gameCanvas");
 const renderer=new THREE.WebGLRenderer({canvas});
 renderer.setSize(window.innerWidth,window.innerHeight);
@@ -115,32 +113,47 @@ function createBarriers(){
   }
 }
 
-// --- Question bank ---
+// --- Question Bank ---
 const qData={
-  1:[
+  1:[ // One-Step Equations
     {q:"x + 7 = 12", a:"5", choices:["3","4","5","6"], hint:"Subtract 7 from both sides."},
     {q:"x - 6 = 9", a:"15", choices:["11","13","14","15"], hint:"Add 6 to both sides."},
     {q:"3x = 18", a:"6", choices:["5","6","7","8"], hint:"Divide both sides by 3."},
     {q:"x / 4 = 5", a:"20", choices:["10","15","20","25"], hint:"Multiply both sides by 4."},
-    {q:"x - 3 = 2", a:"5", choices:["4","5","6","7"], hint:"Add 3 to both sides."}
+    {q:"x - 3 = 2", a:"5", choices:["4","5","6","7"], hint:"Add 3 to both sides."},
+    {q:"x + 9 = 20", a:"11", choices:["9","10","11","12"], hint:"Subtract 9 from both sides."},
+    {q:"8x = 64", a:"8", choices:["7","8","9","10"], hint:"Divide by 8."},
+    {q:"x / 2 = 10", a:"20", choices:["18","19","20","21"], hint:"Multiply both sides by 2."},
+    {q:"x - 12 = 8", a:"20", choices:["16","18","20","22"], hint:"Add 12 to both sides."},
+    {q:"5x = 25", a:"5", choices:["4","5","6","7"], hint:"Divide both sides by 5."}
   ],
-  2:[
+  2:[ // Two-Step Equations
     {q:"2x + 5 = 13", a:"4", choices:["3","4","5","6"], hint:"Subtract 5 then divide by 2."},
     {q:"3x - 4 = 8", a:"4", choices:["3","4","5","6"], hint:"Add 4 then divide by 3."},
     {q:"5x + 7 = 22", a:"3", choices:["2","3","4","5"], hint:"Subtract 7 then divide by 5."},
     {q:"6x - 2 = 10", a:"2", choices:["1","2","3","4"], hint:"Add 2 then divide by 6."},
-    {q:"4x + 9 = 25", a:"4", choices:["3","4","5","6"], hint:"Subtract 9 then divide by 4."}
+    {q:"4x + 9 = 25", a:"4", choices:["3","4","5","6"], hint:"Subtract 9 then divide by 4."},
+    {q:"7x - 5 = 16", a:"3", choices:["2","3","4","5"], hint:"Add 5 then divide by 7."},
+    {q:"2x + 9 = 15", a:"3", choices:["2","3","4","5"], hint:"Subtract 9 then divide by 2."},
+    {q:"9x - 12 = 6", a:"2", choices:["1","2","3","4"], hint:"Add 12 then divide by 9."},
+    {q:"3x + 8 = 14", a:"2", choices:["1","2","3","4"], hint:"Subtract 8 then divide by 3."},
+    {q:"8x - 4 = 20", a:"3", choices:["2","3","4","5"], hint:"Add 4 then divide by 8."}
   ],
-  3:[
+  3:[ // Three-Step Equations
     {q:"2(x + 3) = 14", a:"4", choices:["3","4","5","6"], hint:"Divide by 2 first, then subtract 3."},
     {q:"3(x - 2) + 4 = 10", a:"4", choices:["3","4","5","6"], hint:"Simplify step-by-step."},
     {q:"4(x + 1) = 20", a:"4", choices:["4","5","6","3"], hint:"Divide by 4, then subtract 1."},
     {q:"5x - 3 = 2x + 9", a:"4", choices:["3","4","5","6"], hint:"Bring variables to one side."},
-    {q:"2(x - 5) + 8 = 14", a:"8", choices:["6","7","8","9"], hint:"Expand, simplify, solve."}
+    {q:"2(x - 5) + 8 = 14", a:"8", choices:["6","7","8","9"], hint:"Expand, simplify, solve."},
+    {q:"3(x + 2) - 5 = 10", a:"3", choices:["2","3","4","5"], hint:"Simplify then isolate x."},
+    {q:"4(x - 3) + 2 = 10", a:"5", choices:["4","5","6","7"], hint:"Simplify step-by-step."},
+    {q:"6x - (2x + 4) = 8", a:"3", choices:["2","3","4","5"], hint:"Expand, then simplify."},
+    {q:"2(x + 4) - 6 = 8", a:"5", choices:["4","5","6","7"], hint:"Simplify and isolate x."},
+    {q:"7x - 2(3x - 4) = 10", a:"3", choices:["2","3","4","5"], hint:"Expand brackets and simplify."}
   ]
 };
 
-// --- Core logic ---
+// --- Core Logic ---
 let questions=[],currentQ=0,score=0;
 const questionEl=document.getElementById("question");
 const answerInput=document.getElementById("answerInput");
@@ -197,7 +210,7 @@ function restartGame(){
 function startGame(level){
   document.getElementById("levelSelectBox").style.display="none";
   document.getElementById("questionBox").style.display="flex";
-  questions=qData[level].sort(()=>0.5-Math.random()).slice(0,5);
+  questions=qData[level].sort(()=>0.5-Math.random()).slice(0,10);
   score=0;currentQ=0;createBarriers();loadQuestion();
 }
 
@@ -206,3 +219,5 @@ animate();
 </script>
 </body>
 </html>
+
+
